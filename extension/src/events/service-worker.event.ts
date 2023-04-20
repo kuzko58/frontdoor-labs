@@ -1,0 +1,7 @@
+export const serviceWorkerEvents = {
+    UPDATE_SERVICE_WORKER: 'UPDATE_SERVICE_WORKER',
+    REGISTER_CONTENT_SCRIPT: 'REGISTER_CONTENT_SCRIPT',
+    INITIALIZE_CONTENT_SCRIPT_DATA: 'INITIALIZE_CONTENT_SCRIPT_DATA',
+};
+
+export type IServiceWorkerEvents = typeof serviceWorkerEvents;

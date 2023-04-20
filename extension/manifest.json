@@ -1,0 +1,45 @@
+{
+    "name": "frontdoor",
+    "version": "1.0",
+    "description": "Frontdoor Chrome Extension",
+    "manifest_version": 3,
+    "icons": {},
+    "permissions": [
+        "tabs",
+        "storage",
+        "notifications",
+        "alarms",
+        "scripting"
+    ],
+    "content_scripts": [
+        {
+            "js": [
+                "src/content/main.tsx"
+            ],
+            "css": [],
+            "matches": [
+                "<all_urls>"
+            ],
+            "run_at": "document_idle",
+            "all_frames": true,
+            "match_about_blank": true
+        }
+    ],
+    "background": {
+        "service_worker": "src/service-worker/main.ts"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "action": {
+        "default_popup": "src/pop-up/index.html"
+    },
+    "host_permissions": [
+        "<all_urls>"
+    ]
+}

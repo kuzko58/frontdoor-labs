@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { serviceWorkerEvents } from '../../events/service-worker.event';
-import { sendMessageToWorker } from '../../services/chrome-messaging.service';
+import { initializeContent } from '../handlers/initialize-content.handler';
 
 const initialState = {
     isAuthenticated: false,
@@ -39,13 +38,7 @@ export const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => 
         setState(initialState);
     };
     React.useEffect(() => {
-        sendMessageToWorker(
-            { event: serviceWorkerEvents.INITIALIZE_CONTENT_SCRIPT_DATA },
-            (data: Partial<IAppState>) => {
-                console.log('updated', data);
-                updateState(data);
-            },
-        );
+        initializeContent(updateState);
     }, []);
 
     return (

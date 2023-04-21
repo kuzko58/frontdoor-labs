@@ -1,29 +1,37 @@
-import { useState } from 'react';
-import reactLogo from '../assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import type { IMessageReceiveArgs } from '../services/chrome-messaging.service';
+import AuthGuard from './components/AuthGuard';
+import { useAppContext } from './contexts/app-context';
+import { onMessage } from './listeners/on-message.listener';
+import Home from './screens/Home';
+import LoginForm from './screens/Login';
+import RegistrationForm from './screens/RegisterForm';
 
 function App() {
-    const [count, setCount] = useState(0);
+    const context = useAppContext();
+
+    useEffect(() => {
+        const messageLiistener = (...[message, sender, sendResponse]: IMessageReceiveArgs) => {
+            onMessage(context, message, sender, sendResponse);
+        };
+        chrome.runtime.onMessage.addListener(messageLiistener);
+
+        return () => {
+            chrome.runtime.onMessage.removeListener(messageLiistener);
+        };
+    }, [context]);
 
     return (
-        <div className="App">
-            <div>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://reactjs.org" target="_blank">
-                    <img src={reactLogo} className="logo react" alt="React logo" />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+        <div className="p-5 min-w-[300px] min-h-[400px]">
+            <h1 className="text-lg font-bold mb-4 text-violet-600">Frontdoor Labs</h1>
+            <Routes>
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/register" element={<RegistrationForm />} />
+                <Route element={<AuthGuard />}>
+                    <Route path="/" element={<Home />} />
+                </Route>
+            </Routes>
         </div>
     );
 }
